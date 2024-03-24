@@ -12,6 +12,47 @@ def conexao():
     mandante.execute("Select * From Compradores Where nome = ? And senhas = ?", (tb_nome.get(), tb_senha.get()))
     valores = mandante.fetchall()
 
+    #adicionar novo usuario
+    def insere_usu():
+
+        def cadastrando():
+            mandante.execute("Select * From Compradores")
+            mandante.execute("INSERT INTO Compradores (nome, senhas) Values (?,?)", tb_usuario.get(),tb_senha1.get())
+
+            conect.commit()
+
+            tb_usuario.delete(0, END)
+            tb_senha1.delete(0,END)
+
+        tela_5 = Tk()
+
+        tela_5.geometry("300x400")
+        tela_5.title("Cadastrar")
+
+        tela_5.configure(bg="#444444")
+
+        # Cria o titulo
+
+        Label(tela_5, text="Usuario", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=10, width=100,
+                                                                                        height=30)
+        # Cria o campo de texto e define onde vai estar
+
+        tb_usuario = Entry(tela_5)
+        tb_usuario.place(x=47, y=50, width=200, height=25)
+
+        Label(tela_5, text="Senha", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=80, width=100, height=30)
+        tb_senha1 = Entry(tela_5, show="*")
+        tb_senha1.place(x=47, y=120, width=200, height=25)
+
+        BBv = Button(tela_5, text="Verificar", font="Calibri 12", command=cadastrando)
+        BBv.place(x=95, y=180, width=100, height=45)
+
+        BBs = Button(tela_5, text="Fechar", font="Calibri 12", command=tela_5.destroy)
+        BBs.place(x=95, y=260, width=100, height=45)
+
+
+
+
     if valores:
         login.destroy()
         tela_2 = Tk()
@@ -115,6 +156,9 @@ def conexao():
 
         Bv = Button(tela_2, text="Verificiar", command= veri)
         Bv.place(x=270, y=100, width=100, height=45)
+
+        Bu = Button(tela_2, text="Cadastrar", command=insere_usu)
+        Bu.place(x=270, y=260, width=100, height=45)
 
         Bn = Button(tela_2, text="Nova senha", command= novo_cadastro)
         Bn.place(x=270, y=180, width=100, height=45)
