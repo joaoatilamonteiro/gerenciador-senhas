@@ -3,6 +3,8 @@ from tkinter import *
 import pyodbc
 
 
+# estudar um jeito de fazer uma tabela para cada usuario
+
 def conexao():
     caminho = ('DRIVER={SQLite3 ODBC Driver};SERVER=localhost;DATABASE=Projeto_Compras.db')
 
@@ -49,7 +51,6 @@ def conexao():
 
         BBs = Button(tela_5, text="Fechar", font="Calibri 12", command=tela_5.destroy)
         BBs.place(x=95, y=260, width=100, height=45)
-
 
 
 
