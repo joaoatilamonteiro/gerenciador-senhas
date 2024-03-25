@@ -61,8 +61,7 @@ def conexao():
         Label(tela_2, text="Gerenciador de senhas".upper(), bg="#444444", font="Calibri 15", fg="white").place(x=210, y=10, width=225, height=20)
 
         def veri():
-            global tela_3
-            global filtrada
+
 
             mandante.execute("Select * From dados_usuarios")
 
@@ -81,6 +80,7 @@ def conexao():
             lista.grid(padx=80, pady=0, ipady=250, ipadx=150, row=1)
 
             for va in valores:
+                ide = va[0]
                 corporação = va[1]
                 nome = va[2]
                 senha = va[3]
@@ -88,6 +88,8 @@ def conexao():
                 lista.insert(tkinter.END, "__ Corporação: {}__".format(corporação))
                 lista.insert(tkinter.END, "___ Usuario: {}___".format(nome))
                 lista.insert(tkinter.END, " ___Senha: {}___ ".format(senha))
+                lista.insert(tkinter.END, "__ ID: {}__".format(ide))
+
 
             scroll = tkinter.Scrollbar(tela_3)
             scroll.grid(row=1, column=1, sticky=tkinter.N)
@@ -96,7 +98,6 @@ def conexao():
             return tela_3
 
         def novo_cadastro():
-            global tela_4
 
             def gravar_dados():
                 mandante.execute("Select * From dados_usuarios")
@@ -152,8 +153,6 @@ def conexao():
             BBv.configure(bg="#444444", fg="white")
 
             tela_4.configure(bg="#444444")
-            return
-
             # gerenciador senhas = y=10
 
         buttons = 100
