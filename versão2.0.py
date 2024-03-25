@@ -1,25 +1,25 @@
 import tkinter
 from tkinter import *
-import pyodbc
+import sqlite3
 
 
 # estudar um jeito de fazer uma tabela para cada usuario
 
 def conexao():
-    caminho = ('DRIVER={SQLite3 ODBC Driver};SERVER=localhost;DATABASE=Projeto_Compras.db')
+    caminho = ("Projeto_Compras.db")
 
-    conect = pyodbc.connect(caminho)
+    conect = sqlite3.connect(caminho)
 
     mandante = conect.cursor()
-    mandante.execute("Select * From Compradores Where nome = ? And senhas = ?", (tb_nome.get(), tb_senha.get()))
+    mandante.execute("Select * From usuarios Where nome = ? And senhas = ?", (tb_nome.get(), tb_senha.get()))
     valores = mandante.fetchall()
 
-    #adicionar novo usuario
+
     def insere_usu():
 
         def cadastrando():
-            mandante.execute("Select * From Compradores")
-            mandante.execute("INSERT INTO Compradores (nome, senhas) Values (?,?)", tb_usuario.get(),tb_senha1.get())
+            mandante.execute("Select * From usuarios")
+            mandante.execute("INSERT INTO usuarios (nome, senhas) Values (?,?)", (tb_usuario.get(),tb_senha1.get()))
 
             conect.commit()
 
@@ -43,7 +43,7 @@ def conexao():
         tb_usuario.place(x=47, y=50, width=200, height=25)
 
         Label(tela_5, text="Senha", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=80, width=100, height=30)
-        tb_senha1 = Entry(tela_5, show="*")
+        tb_senha1 = Entry(tela_5)
         tb_senha1.place(x=47, y=120, width=200, height=25)
 
         BBv = Button(tela_5, text="Verificar", font="Calibri 12", command=cadastrando)
@@ -68,7 +68,7 @@ def conexao():
             global filtrada
 
 
-            mandante.execute("Select * From Produtos")
+            mandante.execute("Select * From dados_usuarios")
 
             valores = mandante.fetchall()
 
@@ -104,10 +104,8 @@ def conexao():
 
             def gravar_dados():
 
-                mandante.execute("Select * From Produtos")
-
-                mandante.execute("INSERT INTO Produtos (corporacao,login, senha) Values (?,?,?)", tb_corporação.get(),tb_nome.get(),
-                                 tb_nova_senha.get())
+                mandante.execute("Select * From dados_usuarios")
+                mandante.execute("INSERT INTO dados_usuarios (corporacao,login, senha) Values (?,?,?)", (tb_corporação.get(),tb_nome.get(), tb_nova_senha.get()) )
                 conect.commit()
 
                 tb_corporação.delete(0, END)
