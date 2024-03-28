@@ -3,7 +3,6 @@ from tkinter import *
 import sqlite3
 
 
-# estudar um jeito de fazer uma tabela para cada usuario
 conect = sqlite3.connect("Dados.db")
 
 mandante = conect.cursor()
