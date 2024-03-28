@@ -4,52 +4,39 @@ import sqlite3
 
 
 # estudar um jeito de fazer uma tabela para cada usuario
+conect = sqlite3.connect("Dados.db")
+
+mandante = conect.cursor()
+
+conect = sqlite3.connect("Dados.db")
+mandante.execute('''
+CREATE TABLE IF NOT EXISTS dados_usuarios (
+	"id"	INTEGER,
+	"corporacao" TEXT,
+	"login"	TEXT,
+	"senha"	TEXT,
+	PRIMARY KEY("id")
+);
+''')
+
+mandante.execute('''
+CREATE TABLE IF NOT EXISTS usuarios (
+	"id"	INTEGER,
+	"nome"	TEXT,
+	"senhas"	TEXT,
+	PRIMARY KEY("id")
+);
+''')
+
+mandante.execute('''INSERT INTO usuarios (nome,senhas) Values ("usuario","a81295373")''')
+
+conect.commit()
 
 def conexao():
-    caminho = "Projeto_Compras.db"
-
-    conect = sqlite3.connect(caminho)
-
-    mandante = conect.cursor()
+    global mandante
     mandante.execute("Select * From usuarios Where nome = ? And senhas = ?", (tb_nome.get(), tb_senha.get()))
     valores = mandante.fetchall()
 
-    def insere_usu():
-
-        def cadastrando():
-            mandante.execute("Select * From usuarios")
-            mandante.execute("INSERT INTO usuarios (nome, senhas) Values (?,?)", (tb_usuario.get(), tb_senha1.get()))
-
-            conect.commit()
-
-            tb_usuario.delete(0, END)
-            tb_senha1.delete(0, END)
-
-        tela_5 = Tk()
-
-        tela_5.geometry("300x400")
-        tela_5.title("Cadastrar")
-
-        tela_5.configure(bg="#444444")
-
-        # Cria o titulo
-
-        Label(tela_5, text="Usuario", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=10, width=100,
-                                                                                         height=30)
-        # Cria o campo de texto e define onde vai estar
-
-        tb_usuario = Entry(tela_5)
-        tb_usuario.place(x=47, y=50, width=200, height=25)
-
-        Label(tela_5, text="Senha", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=80, width=100, height=30)
-        tb_senha1 = Entry(tela_5)
-        tb_senha1.place(x=47, y=120, width=200, height=25)
-
-        BBv = Button(tela_5, text="Verificar", font="Calibri 12", command=cadastrando)
-        BBv.place(x=95, y=180, width=100, height=45)
-
-        BBs = Button(tela_5, text="Fechar", font="Calibri 12", command=tela_5.destroy)
-        BBs.place(x=95, y=260, width=100, height=45)
 
     if valores:
         login.destroy()
@@ -61,7 +48,6 @@ def conexao():
         Label(tela_2, text="Gerenciador de senhas".upper(), bg="#444444", font="Calibri 15", fg="white").place(x=210, y=10, width=225, height=20)
 
         def veri():
-
 
             mandante.execute("Select * From dados_usuarios")
 
@@ -89,6 +75,8 @@ def conexao():
                 lista.insert(tkinter.END, "___ Usuario: {}___".format(nome))
                 lista.insert(tkinter.END, " ___Senha: {}___ ".format(senha))
                 lista.insert(tkinter.END, "__ ID: {}__".format(ide))
+
+
 
 
             scroll = tkinter.Scrollbar(tela_3)
@@ -153,20 +141,20 @@ def conexao():
             BBv.configure(bg="#444444", fg="white")
 
             tela_4.configure(bg="#444444")
+
             # gerenciador senhas = y=10
 
         buttons = 100
-        Bv = Button(tela_2, text="Verificiar", command=veri)
+        Bv = Button(tela_2, text="verificar".capitalize(), command=veri)
         Bv.place(x=270, y=buttons - 40, width=100, height=45)  # y =60
 
-        Bn = Button(tela_2, text="Nova senha", command=novo_cadastro)
+        Bn = Button(tela_2, text="nova senha".capitalize(), command=novo_cadastro)
         Bn.place(x=270, y=buttons + 40, width=100, height=45)
         # 80 a diferença
-        Bu = Button(tela_2, text="Cadastrar", command=insere_usu)
-        Bu.place(x=270, y=buttons + 120, width=100, height=45)
+        Bu = Button(tela_2, text="excluir dados".capitalize())
 
-        Bd = Button(tela_2, text="excluir dados".capitalize())
-        Bd.place(x=270, y=buttons + 200, width=100, height=45)
+
+        Bu.place(x=270, y=buttons + 120, width=100, height=45)
 
         Bv.configure(bg="white", fg="#444444")
         Bn.configure(bg="white", fg="#444444")
