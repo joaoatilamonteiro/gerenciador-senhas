@@ -242,6 +242,9 @@ def conexao():
         Bi = Button(tela_2, text="Cadastrar", command=insere_usu)
         Bi.place(x=270, y=buttons + 200, width=100, height=45)
 
+        Bb = Button(tela_2, text="Modo escuro", fg="white", bg="black", command="preto")
+        Bb.place(x=440, y=260, width=100, height=45)
+
         Bf = Button(tela_2, text="Salvar e fechar", command=fechar)
         Bf.place(x=95, y=260, width=100, height=45)
 
