@@ -128,11 +128,6 @@ def conexao():
                                                                                                         y=usuy + 80,
                                                                                                         width=100,
                                                                                                         height=30)
-            def tela_4_destroy():
-                tela_4.destroy()
-                conect.close()
-
-
             tb_nova_senha = Entry(tela_4)
             tb_nova_senha.place(x=47, y=tb_nomey + 80, width=200, height=25)
 
@@ -140,7 +135,7 @@ def conexao():
             BBv = Button(tela_4, text="novo cadastro".capitalize(), font="Calibri 11", command=gravar_dados)
             BBv.place(x=95, y=BBvy, width=100, height=45)
 
-            BBs = Button(tela_4, text="fechar".capitalize(), font="Calibri 15", command=tela_4_destroy)
+            BBs = Button(tela_4, text="fechar".capitalize(), font="Calibri 15", command=tela_4.destroy)
             BBs.place(x=95, y=BBvy + 80, width=100, height=45)
 
             BBs.configure(bg="#444444", fg="white")
@@ -165,10 +160,8 @@ def conexao():
 
             tela_6.configure(bg="#444444")
 
-            # Cria o titulo
             Label(tela_6, text="Usuario", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=10, width=100,
                                                                                              height=30)
-            # Cria o campo de texto e define onde vai estar
             tb_usuario = Entry(tela_6)
             tb_usuario.place(x=47, y=50, width=200, height=25)
 
@@ -194,37 +187,61 @@ def conexao():
                 valores_excluir = mandante.fetchall()
                 print(valores_excluir)
 
-                # Supondo que 'mandante' e 'conect' estejam corretamente inicializados.
-                # Obtém o ID do campo de entrada
                 ide = tb_excluir.get()
 
-                # Executa a consulta SQL para excluir o registro com o ID fornecido
                 mandante.execute("DELETE FROM usuarios WHERE id = {}".format(ide))
 
-                # Limpa o campo de entrada
                 tb_excluir.delete(0, END)
                 conect.commit()
 
             tela_5 = Tk()
-            tela_5.geometry("200x300")
+            tela_5.geometry("320x200")
             tela_5.title("Login")
             tela_5.configure(bg="#444444")
 
-            # Cria o título
-            Label(tela_5, text="Usuário", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=10, width=100,
+            Label(tela_5, text="Usuário", bg="#444444", font="Calibri 15", fg="white").place(x=105, y=10, width=100,
                                                                                              height=30)
 
             tb_excluir = Entry(tela_5)
-            tb_excluir.place(x=47, y=50, width=200, height=25)
+            tb_excluir.place(x=57, y=50, width=200, height=25)
 
-            # Associa a função 'excluir' ao botão usando uma função lambda
-            BBex = Button(tela_5, text="Fechar", font="Calibri 12", command=excluir)
-            BBex.place(x=47, y=90, width=200, height=25)
+            BBex = Button(tela_5, text="Fechar", font="Calibri 12", command=excluir).place(x=57, y=90, width=200, height=25)
 
         # Chama a função para executar o código
         def fechar():
             conect.close()
             tela_2.destroy()
+
+
+        def veri_cadastro():
+
+            mandante.execute("Select * From usuarios")
+
+            valores = mandante.fetchall()
+
+            tela_7 = Tk()
+            tela_7.geometry("640x900")
+            senha_apara = tkinter.Label(tela_7, text="Senhas", bg="#444444", font="Calibri 25", fg="white")
+            senha_apara.grid(padx=210, pady=10, ipady=5, ipadx=1)
+
+            tela_7.configure(bg="#444444")
+            tela_7.title("Verifique")
+
+            lista = tkinter.Listbox(tela_7, bg="#444444", font="Calibri 15", fg="white")
+            lista.grid(padx=80, pady=0, ipady=250, ipadx=150, row=1)
+
+            for va in valores:
+                ide = va[0]
+                nome = va[1]
+                senhas = va[2]
+                lista.insert(tkinter.END, "\n")
+                lista.insert(tkinter.END, "__ Corporação: {}__".format(ide))
+                lista.insert(tkinter.END, "___ Usuario: {}___".format(nome))
+                lista.insert(tkinter.END, " ___Senha: {}___ ".format(senhas))
+
+            scroll = tkinter.Scrollbar(tela_7)
+            scroll.grid(row=1, column=1, sticky=tkinter.N)
+            lista["yscrollcommand"] = scroll.set
 
         buttons = 100
         Bv = Button(tela_2, text="verificar".capitalize(), command=veri)
@@ -233,7 +250,7 @@ def conexao():
         Bn = Button(tela_2, text="nova senha".capitalize(), command=novo_cadastro)
         Bn.place(x=270, y=buttons + 40, width=100, height=45)
         # 80 a diferença
-        Bu = Button(tela_2, text="excluir dados".capitalize(), command=excluir_usuario)
+        Bu = Button(tela_2, text="excluir login".capitalize(), command=excluir_usuario)
         Bu.place(x=270, y=buttons + 120, width=100, height=45)
 
         Bv.configure(bg="white", fg="#444444")
@@ -242,11 +259,11 @@ def conexao():
         Bi = Button(tela_2, text="Cadastrar", command=insere_usu)
         Bi.place(x=270, y=buttons + 200, width=100, height=45)
 
-        Bb = Button(tela_2, text="Modo escuro", fg="white", bg="black", command="preto")
-        Bb.place(x=440, y=260, width=100, height=45)
-
         Bf = Button(tela_2, text="Salvar e fechar", command=fechar)
         Bf.place(x=95, y=260, width=100, height=45)
+
+        Bb = Button(tela_2, text="Modo escuro", fg="black", bg="white", command=veri_cadastro)
+        Bb.place(x=445, y=260, width=100, height=45)
 
         tela_2.mainloop()
 
@@ -257,17 +274,13 @@ def conexao():
         tb_nome.delete(0, "end")
         tb_senha.delete(0, "end")
 
-
 login = Tk()
 login.geometry("300x400")
 login.title("Login")
 
 login.configure(bg="#444444")
 
-# Cria o titulo
-
 Label(login, text="Usuario", bg="#444444", font="Calibri 15", fg="white").place(x=95, y=10, width=100, height=30)
-# Cria o campo de texto e define onde vai estar
 
 tb_nome = Entry(login)
 
