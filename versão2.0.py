@@ -3,41 +3,45 @@ from tkinter import *
 import sqlite3
 import os
 
-# faz com que não repita os dados da linha 31
-if not os.path.isfile("Dados.db"):
-    conect = sqlite3.connect("Dados.db")
 
-    mandante = conect.cursor()
+def criar_banco_dados():
+    if not os.path.isfile("Dados.db"):
+        conect = sqlite3.connect("Dados.db")
+        mandante = conect.cursor()
 
-    mandante.execute('''
-    CREATE TABLE IF NOT EXISTS usuarios (
-        "id"	INTEGER,
-        "nome"	TEXT,
-        "senhas"	TEXT,
-        PRIMARY KEY("id")
-    );
-    ''')
+        mandante.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            "id"	INTEGER,
+            "nome"	TEXT,
+            "senhas"	TEXT,
+            PRIMARY KEY("id")
+        );
+        ''')
 
-    mandante.execute('''
-    CREATE TABLE IF NOT EXISTS dados_usuarios (
-        "id"	INTEGER,
-        "corporacao" TEXT,
-        "login"	TEXT,
-        "senha"	TEXT,
-        PRIMARY KEY("id")
-    );
-    ''')
+        mandante.execute('''
+        CREATE TABLE IF NOT EXISTS dados_usuarios (
+            "id"	INTEGER,
+            "corporacao" TEXT,
+            "login"	TEXT,
+            "senha"	TEXT,
+            PRIMARY KEY("id")
+        );
+        ''')
 
-    mandante.execute('''INSERT INTO usuarios (nome, senhas) VALUES ("usuario", "a81295373")''')
+        mandante.execute('''INSERT INTO usuarios (nome, senhas) VALUES ("usuario", "a81295373")''')
 
-conect = sqlite3.connect("Dados.db")
+        conect.commit()
+        conect.close()
 
-mandante = conect.cursor()
 
+criar_banco_dados()
 
 
 def conexao():
-    mandante.execute("Select * From usuarios Where nome = ? And senhas = ?", (tb_nome.get(), tb_senha.get()))
+    conect = sqlite3.connect("Dados.db")
+    mandante = conect.cursor()
+
+    mandante.execute("SELECT * FROM usuarios WHERE nome = ? AND senhas = ?", (tb_nome.get(), tb_senha.get()))
     conect.commit()
     valores = mandante.fetchall()
 
@@ -60,7 +64,7 @@ def conexao():
             valores = mandante.fetchall()
 
             tela_3 = Tk()
-            tela_3.geometry("640x900")
+            tela_3.geometry("640x600")
             senha_apara = tkinter.Label(tela_3, text="Senhas", bg="#444444", font="Calibri 25", fg="white")
             senha_apara.grid(padx=210, pady=10, ipady=5, ipadx=1)
 
@@ -68,7 +72,7 @@ def conexao():
             tela_3.title("Verifique")
 
             lista = tkinter.Listbox(tela_3, bg="#444444", font="Calibri 15", fg="white")
-            lista.grid(padx=80, pady=0, ipady=250, ipadx=150, row=1)
+            lista.grid(padx=80, pady=0, ipady=100, ipadx=150, row=1)
 
             for va in valores:
                 ide = va[0]
@@ -181,7 +185,7 @@ def conexao():
 
 
 #apaga os dados de login do gerenciador
-        def excluir_usuario():
+        def excluir_cadastro():
             def excluir():
                 mandante.execute("Select * From usuarios")
                 valores_excluir = mandante.fetchall()
@@ -199,7 +203,7 @@ def conexao():
             tela_5.title("Login")
             tela_5.configure(bg="#444444")
 
-            Label(tela_5, text="Usuário", bg="#444444", font="Calibri 15", fg="white").place(x=105, y=10, width=100,
+            Label(tela_5, text="Diga a ID", bg="#444444", font="Calibri 15", fg="white").place(x=105, y=10, width=100,
                                                                                              height=30)
 
             tb_excluir = Entry(tela_5)
@@ -235,22 +239,52 @@ def conexao():
                 nome = va[1]
                 senhas = va[2]
                 lista.insert(tkinter.END, "\n")
-                lista.insert(tkinter.END, "__ Corporação: {}__".format(ide))
                 lista.insert(tkinter.END, "___ Usuario: {}___".format(nome))
                 lista.insert(tkinter.END, " ___Senha: {}___ ".format(senhas))
+                lista.insert(tkinter.END, "__ ID: {}__".format(ide))
+
 
             scroll = tkinter.Scrollbar(tela_7)
             scroll.grid(row=1, column=1, sticky=tkinter.N)
             lista["yscrollcommand"] = scroll.set
 
+
+        def excluir_login():
+            def excluir():
+                mandante.execute("Select * From dados_usuarios")
+                valores_excluir = mandante.fetchall()
+                print(valores_excluir)
+
+                ide = tb_excluir.get()
+
+                mandante.execute("DELETE FROM dados_usuarios WHERE id = {}".format(ide))
+
+                tb_excluir.delete(0, END)
+                conect.commit()
+
+            tela_8 = Tk()
+            tela_8.geometry("320x200")
+            tela_8.title("Login")
+            tela_8.configure(bg="#444444")
+
+            Label(tela_8, text="Diga a ID", bg="#444444", font="Calibri 15", fg="white").place(x=105, y=10, width=100,
+                                                                                             height=30)
+
+            tb_excluir = Entry(tela_8)
+            tb_excluir.place(x=57, y=50, width=200, height=25)
+
+            BBex = Button(tela_8, text="Fechar", font="Calibri 12", command=excluir)
+            BBex.place(x=57, y=90, width=200, height=25)
+
+
         buttons = 100
-        Bv = Button(tela_2, text="verificar".capitalize(), command=veri)
+        Bv = Button(tela_2, text="verificar login".capitalize(), command=veri)
         Bv.place(x=270, y=buttons - 40, width=100, height=45)  # y =60
 
         Bn = Button(tela_2, text="nova senha".capitalize(), command=novo_cadastro)
         Bn.place(x=270, y=buttons + 40, width=100, height=45)
         # 80 a diferença
-        Bu = Button(tela_2, text="excluir login".capitalize(), command=excluir_usuario)
+        Bu = Button(tela_2, text="excluir cadastro".capitalize(), command=excluir_cadastro)
         Bu.place(x=270, y=buttons + 120, width=100, height=45)
 
         Bv.configure(bg="white", fg="#444444")
@@ -262,8 +296,11 @@ def conexao():
         Bf = Button(tela_2, text="Salvar e fechar", command=fechar)
         Bf.place(x=95, y=260, width=100, height=45)
 
-        Bb = Button(tela_2, text="Modo escuro", fg="black", bg="white", command=veri_cadastro)
-        Bb.place(x=445, y=260, width=100, height=45)
+        Bb = Button(tela_2, text="Verificar cadastros", fg="black", bg="white", command=veri_cadastro)
+        Bb.place(x=445, y=260, width=110, height=45)
+
+        Bvl = Button(tela_2, text="Excluir login", fg="black", bg="white", command=excluir_login)
+        Bvl.place(x=95, y=100, width=100, height=45)
 
         tela_2.mainloop()
 
