@@ -1,4 +1,5 @@
 Gerenciador de Senhas
+
 Este projeto é um gerenciador de senhas simples, desenvolvido em Python utilizando a biblioteca Tkinter para a interface gráfica e SQLite para o banco de dados.
 
 Funcionalidades
