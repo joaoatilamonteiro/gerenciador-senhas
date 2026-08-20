@@ -3,7 +3,7 @@ name: Build and Release Multiplataforma
 on:
   push:
     tags:
-      - 'v*' # Dispara a automação sempre que você criar uma tag como v1.0.0
+      - 'v*'
 
 permissions:
   contents: write
@@ -16,19 +16,12 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            artifact_name: GerenciadorSenhas-Windows.exe
-            asset_name: GerenciadorSenhas-Windows.exe
             build_cmd: pyinstaller --noconfirm --onefile --windowed --name "GerenciadorSenhas-Windows" --add-data "interface.py;." --add-data "gerenciador_banco.py;." --collect-all streamlit --collect-all cryptography --copy-metadata streamlit --copy-metadata cryptography main.py
 
           - os: ubuntu-latest
-            artifact_name: GerenciadorSenhas-Linux
-            asset_name: GerenciadorSenhas-Linux.tar.gz
             build_cmd: pyinstaller --noconfirm --onefile --name "GerenciadorSenhas-Linux" --add-data "interface.py:." --add-data "gerenciador_banco.py:." --collect-all streamlit --collect-all cryptography --copy-metadata streamlit --copy-metadata cryptography main.py
 
-
           - os: macos-latest
-            artifact_name: GerenciadorSenhas-macOS
-            asset_name: GerenciadorSenhas-macOS.tar.gz
             build_cmd: pyinstaller --noconfirm --onefile --windowed --name "GerenciadorSenhas-macOS" --add-data "interface.py:." --add-data "gerenciador_banco.py:." --collect-all streamlit --collect-all cryptography --copy-metadata streamlit --copy-metadata cryptography main.py
 
     steps:
@@ -49,23 +42,12 @@ jobs:
       - name: Compilar com PyInstaller
         run: ${{ matrix.build_cmd }}
 
-      - name: Compactar build no Linux/macOS
-        if: runner.os != 'Windows'
-        run: |
-          cd dist
-          tar -czf ../${{ matrix.asset_name }} GerenciadorSenhas
-
-      - name: Compactar build no Windows
-        if: runner.os == 'Windows'
-        run: |
-          Compress-Archive -Path dist/GerenciadorSenhas -DestinationPath GerenciadorSenhas-Windows.zip
-
-      - name: Enviar artefatos para o Release
+      - name: Enviar executaveis diretos para o Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            GerenciadorSenhas-Windows.zip
-            GerenciadorSenhas-Linux.tar.gz
-            GerenciadorSenhas-macOS.tar.gz
+            dist/GerenciadorSenhas-Windows.exe
+            dist/GerenciadorSenhas-Linux
+            dist/GerenciadorSenhas-macOS
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
