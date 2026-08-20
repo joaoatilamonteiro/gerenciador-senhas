@@ -1,46 +1,46 @@
-Gerenciador de Senhas
+# 🔐 Gerenciador de Senhas
 
-Este projeto é um gerenciador de senhas simples, desenvolvido em Python utilizando a biblioteca Tkinter para a interface gráfica e SQLite para o banco de dados.
+Este projeto é um gerenciador de senhas moderno e seguro, desenvolvido em Python. Ele utiliza uma interface web local com **Streamlit** e um motor de banco de dados **SQLite**, aplicando conceitos avançados de criptografia e arquitetura *Zero-Knowledge*.
 
-Funcionalidades
-Criar Banco de Dados: Cria um banco de dados SQLite se ele não existir.
-Login: Permite que um usuário faça login com um nome de usuário e senha.
-Gerenciamento de Senhas: Após o login, o usuário pode ver, adicionar e excluir senhas de diferentes corporações.
-Cadastro de Usuário: Permite adicionar novos usuários ao sistema.
-Exclusão de Usuário: Permite excluir usuários do sistema.
+---
 
-Como usar
-1. Criar Banco de Dados
-O banco de dados é criado automaticamente na primeira execução do programa se ele não existir. O banco de dados contém duas tabelas:
+## 🚀 Funcionalidades Principais
 
-usuarios: Armazena os nomes de usuários e suas senhas.
-dados_usuarios: Armazena as corporações, logins e senhas gerenciadas pelos usuários.
+* **First Setup Automático:** Cria o banco de dados dinamicamente e exige a criação de um Administrador Master no primeiro acesso, eliminando senhas padrão expostas no código.
+* **Criptografia Zero-Knowledge:** As senhas do cofre são criptografadas com nível militar (AES-128 via Fernet). A chave de segurança nunca é salva em disco; ela é gerada dinamicamente na memória usando o hash (SHA-256) da senha de login do usuário.
+* **Isolamento de Dados (Tenant Isolation):** Cada administrador cadastrado possui seu próprio cofre isolado. Um usuário não tem acesso às credenciais de outro.
+* **Sanitização de Dados:** Tratamento de inputs para prevenir falhas de autenticação geradas por espaços em branco acidentais.
+* **Gerenciamento de Administradores:** Controle total para adicionar ou remover outros usuários de acesso ao sistema.
 
-2. Login
-Para fazer login, use as credenciais predefinidas:
+---
 
-Usuário: usuario
-Senha: a81295373
+## 🛠️ Como Usar
 
-3. Interface do Gerenciador de Senhas
-Após o login bem-sucedido, você será redirecionado para a tela principal, onde pode:
+### 1. Instalação e Execução
+Certifique-se de ter o Python 3 instalado. No terminal do repositório, instale as dependências executando:
+> `pip install -r requirements.txt`
 
-Verificar Logins: Exibe uma lista de todas as senhas armazenadas.
+Para rodar o projeto localmente e abrir a interface no seu navegador, execute:
+> `streamlit run interface.py`
+*(Se preferir, utilize o lançador `.bat` disponibilizado na pasta para executar com duplo clique).*
 
-Nova Senha: Permite adicionar um novo login e senha para uma corporação.
+### 2. Primeiro Acesso (Setup Inicial)
+Por questões de segurança, o sistema não possui credenciais padrão. Ao executar o projeto em um ambiente limpo (sem o arquivo `Dados.db`), a tela de **Configuração Inicial** será exibida. Crie o seu usuário e a sua senha Master. **Atenção:** Guarde bem essa senha, pois ela será a única forma de descriptografar o seu cofre futuramente.
 
-Excluir Cadastro: Permite excluir um cadastro de usuário.
+### 3. Navegação (Painel Principal)
+Após o login bem-sucedido, utilize o menu lateral para navegar pelas funcionalidades:
+* **📂 Senhas Salvas:** Visualize a lista de senhas, descriptografadas em tempo real na tela.
+* **➕ Nova Senha:** Cadastre uma nova corporação, login e senha. Os dados são criptografados antes de chegar ao banco.
+* **👥 Gerenciar Usuários:** Adicione ou exclua contas de outros administradores do sistema.
 
-Cadastrar: Permite adicionar um novo usuário ao sistema.
+---
 
-Verificar Cadastros: Exibe uma lista de todos os usuários cadastrados.
+## 💻 Tecnologias Utilizadas
 
-Excluir Login: Permite excluir um login específico do banco de dados.
+* **Linguagem:** Python 3
+* **Interface Web:** Streamlit
+* **Manipulação de Tabelas:** Pandas
+* **Banco de Dados:** SQLite3 (Nativo)
+* **Segurança e Criptografia:** Cryptography (Fernet) e Hashlib (SHA-256)
 
-Tecnologias usadas
-Python 3
-Tkinter
-SQLite3
-
-
-Link para download: https://mega.nz/file/f6BBQJSK#4Ha-6_0fKh7eFH_3-d1dtTvxCfZaJ8UVqFjZNJ5RbME
+---
