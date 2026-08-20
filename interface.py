@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from gerenciador_banco import GerenciadorBanco
+import os
 
 db = GerenciadorBanco()
 
@@ -111,4 +112,7 @@ else:
 
     elif menu == "Sair":
         st.session_state.clear()
-        st.rerun()
+        st.success("Saindo do sistema... O aplicativo será encerrado.")
+
+        # Mata o processo do Streamlit/Python atual no sistema operacional
+        os._exit(0)

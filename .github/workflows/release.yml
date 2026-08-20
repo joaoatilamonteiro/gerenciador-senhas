@@ -18,17 +18,18 @@ jobs:
           - os: windows-latest
             artifact_name: GerenciadorSenhas-Windows.exe
             asset_name: GerenciadorSenhas-Windows.exe
-            build_cmd: pyinstaller --noconfirm --onedir --windowed --name "GerenciadorSenhas" --add-data "interface.py;." --add-data "gerenciador_banco.py;." --collect-all streamlit --copy-metadata streamlit main.py
+            build_cmd: pyinstaller --noconfirm --onefile --windowed --name "GerenciadorSenhas-Windows" --add-data "interface.py;." --add-data "gerenciador_banco.py;." --collect-all streamlit --collect-all cryptography --copy-metadata streamlit --copy-metadata cryptography main.py
 
           - os: ubuntu-latest
             artifact_name: GerenciadorSenhas-Linux
             asset_name: GerenciadorSenhas-Linux.tar.gz
-            build_cmd: pyinstaller --noconfirm --onedir --name "GerenciadorSenhas" --add-data "interface.py:." --add-data "gerenciador_banco.py:." --collect-all streamlit --copy-metadata streamlit main.py
+            build_cmd: pyinstaller --noconfirm --onefile --name "GerenciadorSenhas-Linux" --add-data "interface.py:." --add-data "gerenciador_banco.py:." --collect-all streamlit --collect-all cryptography --copy-metadata streamlit --copy-metadata cryptography main.py
+
 
           - os: macos-latest
             artifact_name: GerenciadorSenhas-macOS
             asset_name: GerenciadorSenhas-macOS.tar.gz
-            build_cmd: pyinstaller --noconfirm --onedir --windowed --name "GerenciadorSenhas" --add-data "interface.py:." --add-data "gerenciador_banco.py:." --collect-all streamlit --copy-metadata streamlit main.py
+            build_cmd: pyinstaller --noconfirm --onefile --windowed --name "GerenciadorSenhas-macOS" --add-data "interface.py:." --add-data "gerenciador_banco.py:." --collect-all streamlit --collect-all cryptography --copy-metadata streamlit --copy-metadata cryptography main.py
 
     steps:
       - name: Baixar codigo-fonte
